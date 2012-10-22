@@ -20,3 +20,6 @@ _cgo_export.*
 _testmain.go
 
 *.exe
+
+# Produced by building the mindis-cli utility
+mindis-cli/mindis-cli
