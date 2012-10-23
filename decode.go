@@ -12,30 +12,58 @@ func unmarshalItem(data []byte, arg interface{}) error {
 	case *string:
 		*v = string(data)
 	case *bool:
+		if data == nil {
+			*v = false
+			return nil
+		}
 		b, err := strconv.ParseBool(string(data))
 		*v = b
 		return err
 	case *int:
+		if data == nil {
+			*v = 0
+			return nil
+		}
 		n, err := strconv.ParseInt(string(data), 10, 64)
 		*v = int(n)
 		return err
 	case *int32:
+		if data == nil {
+			*v = 0
+			return nil
+		}
 		n, err := strconv.ParseInt(string(data), 10, 32)
 		*v = int32(n)
 		return err
 	case *int64:
+		if data == nil {
+			*v = 0
+			return nil
+		}
 		n, err := strconv.ParseInt(string(data), 10, 64)
 		*v = n
 		return err
 	case *uint:
+		if data == nil {
+			*v = 0
+			return nil
+		}
 		n, err := strconv.ParseUint(string(data), 10, 64)
 		*v = uint(n)
 		return err
 	case *uint32:
+		if data == nil {
+			*v = 0
+			return nil
+		}
 		n, err := strconv.ParseUint(string(data), 10, 32)
 		*v = uint32(n)
 		return err
 	case *uint64:
+		if data == nil {
+			*v = 0
+			return nil
+		}
 		n, err := strconv.ParseUint(string(data), 10, 64)
 		*v = n
 		return err

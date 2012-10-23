@@ -65,9 +65,13 @@ func readBulk(br *bufio.Reader) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	if size < 0 {
+		return nil, nil
+	}
 
 	data := make([]byte, size+2)
-	_, err = br.Read(data)
+	_, err = readFull(br, data)
+
 	switch {
 	case err != nil:
 		return nil, err
@@ -78,6 +82,19 @@ func readBulk(br *bufio.Reader) ([]byte, error) {
 	}
 
 	return data[:size], nil
+}
+
+/* forces a full read of p or produces an error for readers that disobey the requirement that Read only return on error or fulfillment */
+func readFull(r io.Reader, p []byte) (int, error) {
+	cur := 0
+	for cur < len(p) {
+		amt, err := r.Read(p[cur:])
+		cur += amt
+		if err != nil {
+			return cur, err
+		}
+	}
+	return cur, nil
 }
 
 /* reads a integer line from br */

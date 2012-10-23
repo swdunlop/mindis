@@ -1,7 +1,7 @@
 package main
 
 import (
-	".."
+	"github.com/swdunlop/mindis"
 	"flag"
 	"fmt"
 	"net"
