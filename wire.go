@@ -44,12 +44,21 @@ func readMultiBulk(br *bufio.Reader) ([][]byte, error) {
 	data := make([][]byte, 0, count)
 	for count > 0 {
 		f, err := br.ReadByte()
-		if f != '$' {
+		var b []byte
+		switch f {
+		case '$':
+			b, err = readBulk(br)
+			if err != nil {
+				return nil, err
+			}
+		case ':':
+			// coerce an integer into mere bytes
+			b, err = readLine(br)
+			if err != nil {
+				return nil, err
+			}
+		default:
 			return nil, PROTOCOL_ERROR
-		}
-		b, err := readBulk(br)
-		if err != nil {
-			return nil, err
 		}
 		data = append(data, b)
 		count--
@@ -128,7 +137,7 @@ func readLine(br *bufio.Reader) ([]byte, error) {
 	return line, nil
 }
 
-/* 
+/*
 When dealing with a network stack, you want to write full messages whenever possible; therefore, we take the extra copy costs of composing a complete message
 */
 
