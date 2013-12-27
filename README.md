@@ -41,15 +41,18 @@ Certain redis commands, like SUBSCRIBE and MONITOR monopolize a redis connection
     }
     defer t.Close()
     c := mindis.Wrap(c)
+    c.Send("SUBSCRIBE", "events")
+    m.Next() // eat the REDIS acknowledgement
     events := make(chan string)
     go process(events)
     for c.Next() == nil {
-        var msg string
-        if c.Scan(&msg) != nil {
+        var evt []string
+        if c.Scan(&evt) != nil {
             break
         }
-        events <- msg
+        events <- evt[2] // "message", "events", $message
     }
+    println(m.Status().Error())
 
 
 Using Deadlines:
